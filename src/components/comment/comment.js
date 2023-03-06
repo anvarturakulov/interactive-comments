@@ -71,6 +71,7 @@ const CommentItem = styled.div`
     display: flex;
     align-items: center;
   }
+
   .content{
     color: #797c81;
   }
@@ -87,16 +88,20 @@ const CommentItem = styled.div`
       color: hsl(238, 40%, 52%);
     }
   }
+
+  .content-box{
+    width: 100%;
+  }
 `
 
-const Comment = ({ item, currentUser }) => {
+const Comment = ({ item, currentUser, addCommentReply }) => {
 
   const [openAddForm, setOpenAddForm] = useState(false)
+  const [replyId, setReplyId] = useState(null)
 
   const replyClick = (id) => {
-    console.log(id)
+    setReplyId(id)
     setOpenAddForm(openAddForm => !openAddForm)
-
   }
 
   return (
@@ -127,14 +132,21 @@ const Comment = ({ item, currentUser }) => {
         </div>
       </CommentItem>
       {openAddForm ?
-        <CommentAddForm currentUser={currentUser} reply={true} replyTo={item.user?.username} /> : null
+        <CommentAddForm
+          currentUser={currentUser}
+          reply={true}
+          replyToName={item.user?.username}
+          replyToId={replyId}
+          addCommentReply={addCommentReply} />
+        :
+        null
       }
 
       {item.replies && item.replies.length ?
         <div className="replies-box">
           {
             item.replies.map((element, index) => {
-              return <Comment item={element} currentUser={currentUser} key={element.id} />
+              return <Comment item={element} currentUser={currentUser} key={element.id} addCommentReply={addCommentReply} />
             })
           }
         </div>

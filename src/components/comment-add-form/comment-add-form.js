@@ -40,12 +40,33 @@ const AddForm = styled.div`
 
 `
 
-const CommentAddForm = ({ currentUser, reply, replyTo }) => {
+const CommentAddForm = ({ currentUser, reply, replyToName, replyToId, addCommentReply }) => {
+
+  const sendCommentReply = (e) => {
+    let textArea = e.target.parentNode.querySelector('textarea[name="add-form-text"]')
+    addCommentReply(textArea.value, reply, replyToId)
+    textArea.value = ''
+
+    // if (!reply) {
+    //   addCommentReply(textArea.value, reply, replyToId)
+    //   textArea.value = ''
+    // } else {
+    //   addCommentReply(textArea.value, reply, replyToId)
+    //   textArea.value = ''
+    // }
+
+
+
+  }
+
   return (
     <AddForm>
       <img src={currentUser.image.png} alt="" />
-      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." defaultValue={replyTo ? `@${replyTo}, ` : null} />
-      <button className="add-form-btn">{reply ? 'REPLY' : 'SEND'}</button>
+      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." defaultValue={replyToName ? `@${replyToName}, ` : null} />
+      <button
+        className="add-form-btn"
+        onClick={sendCommentReply}
+      >{reply ? 'REPLY' : 'SEND'}</button>
     </AddForm>
   )
 }
