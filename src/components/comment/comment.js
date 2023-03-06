@@ -89,12 +89,14 @@ const CommentItem = styled.div`
   }
 `
 
-const Comment = ({ item, currentUser}) => {
+const Comment = ({ item, currentUser }) => {
 
   const [openAddForm, setOpenAddForm] = useState(false)
 
-  const replyClick = () => {
+  const replyClick = (id) => {
+    console.log(id)
     setOpenAddForm(openAddForm => !openAddForm)
+
   }
 
   return (
@@ -115,7 +117,7 @@ const Comment = ({ item, currentUser}) => {
                 </div>
                 <div className="created">{item.createdAt}</div>
               </div>
-              <div className="reply-btn" onClick={replyClick}>
+              <div className="reply-btn" onClick={() => replyClick(item.id)}>
                 <img src={iconReply} alt="" />
                 Reply
               </div>
@@ -124,18 +126,20 @@ const Comment = ({ item, currentUser}) => {
           </div>
         </div>
       </CommentItem>
+      {openAddForm ?
+        <CommentAddForm currentUser={currentUser} reply={true} replyTo={item.user?.username} /> : null
+      }
+
       {item.replies && item.replies.length ?
         <div className="replies-box">
           {
             item.replies.map((element, index) => {
-              return <Comment item={element} currentUser={currentUser} />
+              return <Comment item={element} currentUser={currentUser} key={element.id} />
             })
           }
         </div>
         : null}
-      {openAddForm ? 
-        <CommentAddForm currentUser={currentUser} reply={true}/> : null
-      }
+
     </>
 
   )

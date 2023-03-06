@@ -35,15 +35,16 @@ const AddForm = styled.div`
       font-weight: 600;
       border: none;
       color: #fff;
+      cursor: pointer;
     }
 
 `
 
-const CommentAddForm = ({ currentUser, reply }) => {
+const CommentAddForm = ({ currentUser, reply, replyTo }) => {
   return (
     <AddForm>
       <img src={currentUser.image.png} alt="" />
-      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." />
+      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." defaultValue={replyTo ? `@${replyTo}, ` : null} />
       <button className="add-form-btn">{reply ? 'REPLY' : 'SEND'}</button>
     </AddForm>
   )

@@ -19,15 +19,30 @@ const getData = (def = false) => {
   return (localData && !def) ? localData : defaultData
 }
 
+const newId = (comments) => {
+  let arrayId = []
+  comments.forEach(item => {
+    arrayId.push(item.id)
+    if (item.replies && item.replies.length) {
+      // console.log(arrayId)
+      arrayId.push([...newId(item.replies)])
+      // console.log(...newId(item.replies))
+    }
+  })
+  return arrayId
+}
+
+
 function App() {
 
   const [data, setData] = useState(getData())
   // console.log(data)
+  console.log(newId(data.comments))
   return (
     <div className="App">
       <Container>
         <CommentsList comments={data.comments} currentUser={data.currentUser} />
-        <CommentAddForm currentUser={data.currentUser} reply={false} />
+        <CommentAddForm currentUser={data.currentUser} reply={false} replyTo={''} />
       </Container>
     </div>
   );

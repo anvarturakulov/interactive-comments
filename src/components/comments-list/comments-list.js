@@ -7,7 +7,7 @@ const CommentsList = ({ comments, currentUser }) => {
   return (
     <>
       {comments.map((item, index) => {
-        return <Comment item={item} key={index} currentUser={currentUser} />
+        return <Comment item={item} key={item.id} currentUser={currentUser} />
       })}
     </>
   )
