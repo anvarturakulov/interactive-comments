@@ -122,7 +122,6 @@ function App() {
       let newComments = [...data.comments]
       let newReply = defaultDataForNewComment(textComment, data)
       let arrayReplies = _.get(newComments, `${paths}.replies`)
-      let number = arrayReplies == undefined ? 0 : arrayReplies.length
       if (arrayReplies == undefined) {
         _.set(newComments, `${paths}.replies.[0]`, newReply);
       } else {
@@ -171,7 +170,6 @@ function App() {
         comments: newComments
       }))
     }
-
   }
 
   const deleteComment = (id, resolution=false) => {
