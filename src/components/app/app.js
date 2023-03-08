@@ -28,16 +28,26 @@ const Container = styled.div`
   .box{
     width: 300px;
     margin: 0 auto;
-    margin-top: 100px;
+    position: fixed;
+    top: 150px;
+    left: 40%;
     background-color: #fff;
     padding: 25px;
     color: #68727e;
     font-size: 16px;
     border-radius: 10px;
+    @media (max-width:680px){
+      left: 2%;
+      padding: 10px;
+      font-size: 14px;
+    }
     .title{
       font-size: 25px;
       margin-bottom: 10px;
       font-weight: 700;
+      @media (max-width:680px){
+        font-size: 20px;
+      }
     }
 
     .content{
@@ -47,6 +57,9 @@ const Container = styled.div`
     .btn-box{
       display: flex;
       justify-content: space-between;
+      /* @media (max-width:680px){
+        justify-content: space-around;
+      } */
     }
 
     .btn{
@@ -57,6 +70,10 @@ const Container = styled.div`
       color: #fff;
       border-radius: 5px;
       cursor: pointer;
+      @media (max-width:680px){
+        font-size: 14px;
+        padding: 10px 20px;
+      }
     }
 
     .btn-red{
@@ -172,8 +189,8 @@ function App() {
     }
   }
 
-  const deleteComment = (id, resolution=false) => {
-    
+  const deleteComment = (id, resolution = false) => {
+
     if (resolution) {
       const { paths } = getComment(data.comments, 'id', id)
       let newComments = [...data.comments]
@@ -195,7 +212,7 @@ function App() {
         ...data,
         comments: newComments
       }))
-      
+
       setShowDeleteWindow(false)
 
     } else {
@@ -231,7 +248,7 @@ function App() {
         <div className="title">Delete comment</div>
         <div className="content">Are you sure you want to delete this comment? This will remove the comment and can't be undone.</div>
         <div className="btn-box">
-          <button className="btn" tabIndex={0} onClick={() =>setShowDeleteWindow(false)}>NO, CANCEL</button>
+          <button className="btn" tabIndex={0} onClick={() => setShowDeleteWindow(false)}>NO, CANCEL</button>
           <button className="btn btn-red" onClick={() => deleteComment(idDeleteComment, true)}>YES, DELETE</button>
         </div>
       </div>

@@ -197,9 +197,6 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
 
   let itsMe = currentUser.username === item.user.username
 
-  let itsMobayl = false
-  if (window.innerWidth < 576) itsMobayl = true
-
   return (
     <>
       <CommentItem>
@@ -223,7 +220,7 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
                 <div className="created">{item.createdAt}</div>
               </div>
 
-              {itsMobayl ? null : itsMe ?
+              {itsMe ?
                 <div className="btn-box">
                   <div className="btn delete" onClick={() => deleteComment(item.id)}>
                     <img src={iconDelete} alt="" />
