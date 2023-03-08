@@ -11,7 +11,7 @@ const AddForm = styled.div`
     border-radius: 10px;
     font-size: 16px;
 
-    @media (max-width:576px){
+    @media (max-width:680px){
       display: block;
     }
 
@@ -29,7 +29,7 @@ const AddForm = styled.div`
       margin: 0px 20px;
       border: .5px solid #e5e5e5;
       padding: 10px 10px 10px 20px;
-      @media (max-width:576px){
+      @media (max-width:680px){
         width: 90%;
         margin: 0;
         max-width: 100%;
@@ -48,10 +48,26 @@ const AddForm = styled.div`
     }
 
     .bottom-box{
-      display: flex;
+      display: block;
       justify-content: space-between;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 10px;
+      img{
+        display: none;
+        @media (max-width:680px){
+          display: block;
+        }
+      }
+      @media (max-width:680px){
+        display: flex;
+      }
+      
+    }
+
+    .user-img{
+      @media (max-width:680px){
+        display: none;
+      }
     }
 
 `
@@ -81,21 +97,13 @@ const CommentAddForm = ({ currentUser, reply, replyToName, replyToId, addComment
     defaultValue = replyToName ? `@${replyToName}, ` : null
   }
 
-  let itsMobayl = false
-  if (window.innerWidth < 576) itsMobayl = true
 
   return (
     <AddForm>
-      {itsMobayl ?
-        null :
-        <img src={currentUser.image.png} alt="" />
-      }
-      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." defaultValue={defaultValue} />
+      <img src={currentUser.image.png} alt="" className="user-img" />
+      <textarea name="add-form-text" id="" cols="30" rows="5" placeholder="Add a comment ..." defaultValue={defaultValue}/>
       <div className="bottom-box">
-        {!itsMobayl ?
-          null :
-          <img src={currentUser.image.png} alt="" />
-        }
+        <img src={currentUser.image.png} alt="" />
         <button
           className="add-form-btn"
           onClick={sendCommentReply}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CommentAddForm from "../comment-add-form/comment-add-form";
 import styled from "styled-components";
 import iconReply from './icons/icon-reply.svg'
@@ -7,13 +7,15 @@ import iconEdit from './icons/icon-edit.svg'
 
 const CommentItem = styled.div`
   background: #fff;
-  /* width: 100%; */
   border-radius: 10px;
   margin: 20px 0;
   box-shadow: 4px 4px 4px -4px rgba(34, 60, 80, 0.2);
   padding: 20px;
   font-size: 15px;
-  transition: all 2s ease-out;
+  transition: all 0.5s ease-out;
+  @media (max-width:680px){
+    font-size: 14px;
+  }
 
   .item-box{
     display: flex;
@@ -61,16 +63,44 @@ const CommentItem = styled.div`
     width: 20px;
   }
 
+  .item-box {
+   .count-box{
+      @media (max-width:680px){
+        display: none;
+      }
+    }
+    .btn{
+      @media (max-width:680px){
+        display: none;
+      }
+    }
+  }
+
+  .bottom-box {
+    .btn{
+      @media (max-width:680px){
+        display: block;
+      }
+    }
+  }
+
   .user{
     display: flex;
     align-items: center;
     margin-right: 20px;
+    @media (max-width:680px){
+      font-size: 14px;
+      margin-right: 10px;
+    }
   }
 
   .user img{
     width: 30px;
     height: 30px;
     margin-right: 15px;
+    @media (max-width:680px){
+      margin-right: 10px;
+    }
   }
 
   .username{
@@ -89,6 +119,9 @@ const CommentItem = styled.div`
   .created{
     color: #797c81;
     font-weight: 500;
+    @media (max-width:680px){
+      font-size: 13px;
+    }
   }
 
   .plus, .minus{
@@ -116,11 +149,14 @@ const CommentItem = styled.div`
     padding: 1px 5px;
     margin-left: 5px;
     font-size: 14px;
+    @media (max-width:680px){
+      font-size: 12px;
+    }
   }
 
   .bottom-box{
     margin-top: 20px;
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     .count-box{
@@ -130,6 +166,9 @@ const CommentItem = styled.div`
       justify-content: space-between;
       padding: 0px 8px;
     }
+    @media (max-width:680px){
+      display: flex;
+    }
   }
 `
 
@@ -138,7 +177,6 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
   const [replyId, setReplyId] = useState(null)
   const [flagReplyEdit, setflagReplyEdit] = useState('REPLY')
   const [openReplyForm, setOpenReplyForm] = useState(false)
-
 
   const replyClick = (id) => {
     setReplyId(id)
@@ -166,13 +204,11 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
     <>
       <CommentItem>
         <div className="item-box">
-          {itsMobayl ? null :
-            <div className="count-box">
-              <div className="plus" onClick={() => incDecScore(item.id, +1)}>+</div>
-              <div className="count">{item.score}</div>
-              <div className="minus" onClick={() => incDecScore(item.id, -1)}>-</div>
-            </div>
-          }
+          <div className="count-box">
+            <div className="plus" onClick={() => incDecScore(item.id, +1)}>+</div>
+            <div className="count">{item.score}</div>
+            <div className="minus" onClick={() => incDecScore(item.id, -1)}>-</div>
+          </div>
           <div className="content-box">
             <div className="header">
               <div className="user-box">
@@ -208,16 +244,13 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
             </div>
             <div className="content">{item.content}</div>
             <div className="bottom-box">
-              {!itsMobayl ? null :
-                <div className="count-box">
-                  <div className="plus" onClick={() => incDecScore(item.id, +1)}>+</div>
-                  <div className="count">{item.score}</div>
-                  <div className="minus" onClick={() => incDecScore(item.id, -1)}>-</div>
-                </div>
-              }
+              <div className="count-box">
+                <div className="plus" onClick={() => incDecScore(item.id, +1)}>+</div>
+                <div className="count">{item.score}</div>
+                <div className="minus" onClick={() => incDecScore(item.id, -1)}>-</div>
+              </div>
 
-              {!itsMobayl ? null : itsMe ?
-
+              {itsMe ?
                 <div className="btn-box">
                   <div className="btn delete" onClick={() => deleteComment(item.id)}>
                     <img src={iconDelete} alt="" />
@@ -245,7 +278,8 @@ const Comment = ({ item, currentUser, addCommentReply, flagsOpenedReplyForms, in
           replyToName={item.user?.username}
           replyToId={replyId}
           addCommentReply={addCommentReply}
-          comments={comments} />
+          comments={comments}
+        />
         :
         null
       }

@@ -8,10 +8,60 @@ import CommentAddForm from '../comment-add-form/comment-add-form';
 
 const Container = styled.div`
   max-width: 640px;
+  /* width: 100%; */
   padding: 0px 20px;
   margin: 0 auto;
   @media (max-width:576px){
     padding: 0px 10px;
+  }
+
+  .wrapper{
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .box{
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 100px;
+    background-color: #fff;
+    padding: 25px;
+    color: #68727e;
+    font-size: 16px;
+    border-radius: 10px;
+    .title{
+      font-size: 25px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .content{
+      margin-bottom: 15px;
+    }
+
+    .btn-box{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn{
+      background-color:#68727e;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-red{
+      background-color:#ee6368;
+    }
   }
 `;
 
@@ -20,6 +70,9 @@ function App() {
 
   const [data, setData] = useState(getData())
   const [flagsOpenedReplyForms, setFlagsOpenedReplyForms] = useState(null)
+  const [showDeleteWindow, setShowDeleteWindow] = useState(false)
+  const [idDeleteComment, setIdDeleteComment] = useState()
+
   let _ = require('lodash');
 
   useEffect(() => {
@@ -109,8 +162,6 @@ function App() {
     console.log('score to ID', id)
     const { paths } = getComment(data.comments, 'id', id)
     let newComments = [...data.comments]
-
-
     let score = parseInt(_.get(newComments, `${paths}.score`), 10)
     score = score + count
     if (score > -1) {
@@ -123,40 +174,76 @@ function App() {
 
   }
 
-  const deleteComment = (id) => {
-    const { paths } = getComment(data.comments, 'id', id)
-    let newComments = [...data.comments]
-    let arrayComments = paths.split('.')
+  const deleteComment = (id, resolution=false) => {
+    
+    if (resolution) {
+      const { paths } = getComment(data.comments, 'id', id)
+      let newComments = [...data.comments]
+      let arrayComments = paths.split('.')
 
-    let arr = arrayComments[arrayComments.length - 1].split('')
-    let parentPath = arrayComments.slice(0, arrayComments.length - 1).join('.')
-    let index = arr.slice(1, arr.length - 1).join('')
+      let arr = arrayComments[arrayComments.length - 1].split('')
+      let parentPath = arrayComments.slice(0, arrayComments.length - 1).join('.')
+      let index = arr.slice(1, arr.length - 1).join('')
 
-    if (parentPath.length > 0) {
-      let arrParentPath = _.get(newComments, `${parentPath}`)
-      let arrParentPathSliced = [...arrParentPath.slice(0, index), ...arrParentPath.slice(index + 1)]
-      _.set(newComments, `${parentPath}`, arrParentPathSliced);
+      if (parentPath.length > 0) {
+        let arrParentPath = _.get(newComments, `${parentPath}`)
+        let arrParentPathSliced = [...arrParentPath.slice(0, index), ...arrParentPath.slice(index + 1)]
+        _.set(newComments, `${parentPath}`, arrParentPathSliced);
+      } else {
+        newComments = [...newComments.slice(0, index), ...newComments.slice(+index + 1, newComments.length)]
+      }
+
+      setData(data => ({
+        ...data,
+        comments: newComments
+      }))
+      
+      setShowDeleteWindow(false)
+
     } else {
-      newComments = [...newComments.slice(0, index), ...newComments.slice(+index + 1, newComments.length)]
+      setIdDeleteComment(id)
+      setShowDeleteWindow(true)
     }
-
-    setData(data => ({
-      ...data,
-      comments: newComments
-    }))
   }
 
+  const onKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      if (e.target.nodeName == 'TEXTAREA') {
+        let target = e.target.parentNode.querySelector('button').click()
+        console.log(target)
+      }
+    }
+  }
 
-  // document.getElementById("text")
-  //   .addEventListener("keyup", function (e) {
-  //     if (e.keyCode === 13) {
-  //       document.getElementById("submit").click();
-  //     }
-  //   })
+  const wrapperBoxClick = (e) => {
+    if (e.target.classList.contains('wrapper')) {
+      setShowDeleteWindow(false)
+    }
+  }
+
+  const wrapperBoxKeyPress = (e) => {
+    if (e.keyCode === 27) {
+      setShowDeleteWindow(false)
+    }
+  }
+
+  const deleteWindow = (
+    <div className="wrapper" onClick={wrapperBoxClick} onKeyDown={wrapperBoxKeyPress}>
+      <div className="box">
+        <div className="title">Delete comment</div>
+        <div className="content">Are you sure you want to delete this comment? This will remove the comment and can't be undone.</div>
+        <div className="btn-box">
+          <button className="btn" tabIndex={0} onClick={() =>setShowDeleteWindow(false)}>NO, CANCEL</button>
+          <button className="btn btn-red" onClick={() => deleteComment(idDeleteComment, true)}>YES, DELETE</button>
+        </div>
+      </div>
+    </div>
+  )
 
   return (
-    <div className="App">
+    <div className="App" onKeyDown={onKeyPress}>
       <Container>
+        {showDeleteWindow ? deleteWindow : null}
         {data.comments.map((item, index) => {
           return <Comment
             item={item}
