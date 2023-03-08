@@ -1,4 +1,4 @@
-const getArrayId = (comments) => {
+export const getArrayId = (comments) => {
     let arrayId = []
     comments.forEach(item => {
         arrayId.push(item.id)
@@ -12,10 +12,10 @@ const getArrayId = (comments) => {
     return arrayId
 }
 
-const getIdToNewComment = (comments) => {
+export const getIdToNewComment = (comments) => {
     let arrayId = getArrayId(comments)
     let id = arrayId[arrayId.length - 1] + 1
     return id
 }
 
-export default getIdToNewComment
+// export getIdToNewComment

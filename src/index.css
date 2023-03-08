@@ -13,8 +13,18 @@ body {
     padding-left: 30px;
     /* background-color: red; */
     border-left: 1px solid #e3e3e3;
+    
   }
 
-  .App{
-    margin: 20px 0;
+.App{
+  margin: 20px 0;
+}
+
+@media (max-width:576px){
+  .replies-box{
+    margin-left: 10px;
+    padding-left: 10px;
   }
+}
+
+  

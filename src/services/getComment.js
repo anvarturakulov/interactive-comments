@@ -38,8 +38,15 @@ function getComment(data, key, value) {
   // находим родителя для пути где ключ key по значению value - родитель тоже в виде путя  
   let parentCurrentPath = currentPath[0].slice(0, currentPath[0].length - 1)
 
+  // найденный путь переводим в строковую значение
+  parentCurrentPath = parentCurrentPath.map(item => {
+    if (parseInt(item, 10)) {
+      return `[${item}]`
+    } else return item
+  }).join('.')
+
   // возвращаем родительского путя и данные объекта по этой родительской пути
-  return { paths: parentCurrentPath, obj: getValue(data, parentCurrentPath) }
+  return { paths: parentCurrentPath }
 }
 
 export default getComment
